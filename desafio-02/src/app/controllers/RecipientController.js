@@ -1,15 +1,15 @@
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
-import Recipient from '../models/Recipient';
+import Recipient from '../models/Recipient'
 
 class RecipientController {
   async store(req, res, next) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-    });
+    })
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(401).json({ error: 'Invalid input' });
+      return res.status(401).json({ error: 'Invalid input' })
     }
 
     const {
@@ -20,7 +20,7 @@ class RecipientController {
       address_state,
       address_city,
       address_postal_code,
-    } = req.body;
+    } = req.body
 
     const recipient = await Recipient.create({
       name,
@@ -30,24 +30,24 @@ class RecipientController {
       address_state,
       address_city,
       address_postal_code,
-    });
+    })
 
-    return res.json(recipient);
+    return res.json(recipient)
   }
 
   async update(req, res, next) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-    });
+    })
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(401).json({ error: 'Invalid input' });
+      return res.status(401).json({ error: 'Invalid input' })
     }
 
-    const recipient = await Recipient.findByPk(req.params.id);
+    const recipient = await Recipient.findByPk(req.params.id)
 
     if (!recipient) {
-      return res.status(404).json({ error: 'recipient not found' });
+      return res.status(404).json({ error: 'recipient not found' })
     }
 
     const {
@@ -58,7 +58,7 @@ class RecipientController {
       address_state,
       address_city,
       address_postal_code,
-    } = await recipient.update(req.body);
+    } = await recipient.update(req.body)
 
     return res.json({
       name,
@@ -68,8 +68,8 @@ class RecipientController {
       address_state,
       address_city,
       address_postal_code,
-    });
+    })
   }
 }
 
-export default new RecipientController();
+export default new RecipientController()

@@ -1,5 +1,5 @@
-import Sequelize, { Model } from 'sequelize';
-import bcrypt from 'bcryptjs';
+import Sequelize, { Model } from 'sequelize'
+import bcrypt from 'bcryptjs'
 
 class User extends Model {
   static init(sequelize) {
@@ -12,14 +12,14 @@ class User extends Model {
       {
         sequelize,
       }
-    );
+    )
 
-    return this;
+    return this
   }
 
   checkPassword(password) {
-    return bcrypt.compare(password, this.password_hash);
+    return bcrypt.compare(password, this.password_hash)
   }
 }
 
-export default User;
+export default User

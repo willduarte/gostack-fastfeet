@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
+import Sequelize, { Model } from 'sequelize'
 
 class Recipient extends Model {
   static init(sequelize) {
@@ -15,10 +15,10 @@ class Recipient extends Model {
       {
         sequelize,
       }
-    );
+    )
 
-    return this;
+    return this
   }
 }
 
-export default Recipient;
+export default Recipient
