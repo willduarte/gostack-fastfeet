@@ -16,7 +16,8 @@ const upload = multer(multerConfig)
 
 routes.post('/sessions', SessionController.store)
 
-routes.get('/deliveryman/:id/orders', DeliverymanOrderController.index)
+routes.get('/deliveryman/:id/orders', DeliverymanOrderController.pending)
+routes.get('/deliveryman/:id/orders/finished', DeliverymanOrderController.finished)
 
 // Authentication required
 routes.use(authenticated)
