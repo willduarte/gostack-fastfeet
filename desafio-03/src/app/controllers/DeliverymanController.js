@@ -2,13 +2,23 @@ import Deliveryman from '../models/Deliveryman'
 import File from '../models/File'
 
 class DeliverymanController {
-  async index(req, res, next) {
-    const deliverymen = await Deliveryman.findAll()
+  async index(req, res) {
+    const deliverymen = await Deliveryman.findAll({
+      order: ['name'],
+      attributes: ['id', 'name', 'email'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['path', 'url'],
+        },
+      ],
+    })
 
     return res.json(deliverymen)
   }
 
-  async store(req, res, next) {
+  async store(req, res) {
     const isValid = await Deliveryman.validator().isValid(req.body)
 
     if (!isValid) {
@@ -26,7 +36,7 @@ class DeliverymanController {
     return res.json(deliveryman)
   }
 
-  async update(req, res, next) {
+  async update(req, res) {
     const isValid = await Deliveryman.validator().isValid(req.body)
 
     if (!isValid) {
@@ -57,7 +67,7 @@ class DeliverymanController {
     })
   }
 
-  async delete(req, res, next) {
+  async delete(req, res) {
     const deliveryman = await Deliveryman.findByPk(req.params.id)
 
     if (!deliveryman) return res.status(404).json({ error: 'Deliveryman not found' })
