@@ -7,6 +7,7 @@ import RecipientController from './app/controllers/RecipientController'
 import FileController from './app/controllers/FileController'
 import DeliverymanController from './app/controllers/DeliverymanController'
 import OrderController from './app/controllers/OrderController'
+import DeliverymanOrderController from './app/controllers/DeliverymanOrderController'
 
 import authenticated from './app/middlewares/authenticated'
 
@@ -14,6 +15,8 @@ const routes = new Router()
 const upload = multer(multerConfig)
 
 routes.post('/sessions', SessionController.store)
+
+routes.get('/deliveryman/:id/orders', DeliverymanOrderController.index)
 
 // Authentication required
 routes.use(authenticated)

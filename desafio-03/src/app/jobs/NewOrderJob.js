@@ -15,9 +15,7 @@ class NewOrderJob {
       context: {
         deliveryman: deliveryman.name,
         recipient: recipient.name,
-        address: `${recipient.address_street}, ${recipient.address_number} -
-          ${recipient.address_complement} - ${recipient.address_state} -
-          ${recipient.address_city} - CEP: ${recipient.address_postal_code}`,
+        address: recipient.address,
       },
     })
   }
