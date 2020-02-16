@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize'
+import * as Yup from 'yup'
 
 class Deliveryman extends Model {
   static init(sequelize) {
@@ -9,6 +10,7 @@ class Deliveryman extends Model {
       },
       {
         sequelize,
+        tableName: 'deliverymen',
       }
     )
 
@@ -17,6 +19,18 @@ class Deliveryman extends Model {
 
   static associate(models) {
     this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' })
+  }
+
+  static validator() {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+      avatar_id: Yup.number().nullable(),
+    })
+
+    return schema
   }
 }
 
