@@ -3,7 +3,8 @@ import Recipient from '../models/Recipient'
 import Deliveryman from '../models/Deliveryman'
 import File from '../models/File'
 
-import Mail from '../../lib/Mail'
+import NewOrderJob from '../jobs/NewOrderJob'
+import Queue from '../../lib/Queue'
 
 class OrderController {
   async index(req, res) {
@@ -57,17 +58,9 @@ class OrderController {
 
     const order = await Order.create(req.body)
 
-    await Mail.sendMail({
-      to: `${deliveryman.name} <${deliveryman.email}>`,
-      subject: 'Nova entrega disponível',
-      template: 'new-order',
-      context: {
-        deliveryman: deliveryman.name,
-        recipient: recipient.name,
-        address: `${recipient.address_street}, ${recipient.address_number} -
-          ${recipient.address_complement} - ${recipient.address_state} -
-          ${recipient.address_city} - CEP: ${recipient.address_postal_code}`,
-      },
+    Queue.add(NewOrderJob.key, {
+      recipient,
+      deliveryman,
     })
 
     return res.json(order)
