@@ -1,4 +1,5 @@
 import express from 'express'
+import 'express-async-errors'
 import { resolve } from 'path'
 import routes from './routes'
 

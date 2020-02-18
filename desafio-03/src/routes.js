@@ -18,6 +18,7 @@ routes.post('/sessions', SessionController.store)
 
 routes.get('/deliveryman/:id/orders', DeliverymanOrderController.pending)
 routes.get('/deliveryman/:id/orders/finished', DeliverymanOrderController.finished)
+routes.put('/deliveryman/:id/orders/:order_id', upload.single('file'), DeliverymanOrderController.update)
 
 // Authentication required
 routes.use(authenticated)
