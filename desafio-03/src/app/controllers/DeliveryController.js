@@ -1,71 +1,44 @@
 import { Op } from 'sequelize'
-import { startOfDay, endOfDay, format } from 'date-fns'
+import { startOfDay, endOfDay } from 'date-fns'
 
 import * as Yup from 'yup'
 import Order from '../models/Order'
-import Recipient from '../models/Recipient'
+import OrderIssue from '../models/OrderIssue'
 import File from '../models/File'
 
-class DeliverymanOrderController {
-  async pending(req, res) {
-    const orders = await Order.findAll({
-      where: { deliveryman_id: req.params.id, end_date: null, canceled_at: null },
-      attributes: ['id', 'start_date', 'end_date'],
+class DeliveryController {
+  async issues(req, res) {
+    const { id } = req.params
+
+    const order = await Order.findByPk(id, {
       include: [
         {
-          model: Recipient,
-          as: 'recipient',
-          attributes: [
-            'id',
-            'address_street',
-            'address_number',
-            'address_complement',
-            'address_state',
-            'address_city',
-            'address_postal_code',
-            'address',
-          ],
+          model: OrderIssue,
+          as: 'issues',
         },
       ],
     })
 
-    return res.json(orders)
+    return res.json(order)
   }
 
-  async finished(req, res) {
-    const orders = await Order.findAll({
-      where: {
-        deliveryman_id: req.params.id,
-        end_date: {
-          [Op.ne]: null,
-        },
-      },
-      attributes: ['id', 'start_date', 'end_date'],
-      include: [
-        {
-          model: Recipient,
-          as: 'recipient',
-          attributes: [
-            'id',
-            'name',
-            'address_street',
-            'address_number',
-            'address_complement',
-            'address_state',
-            'address_city',
-            'address_postal_code',
-            'address',
-          ],
-        },
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['path', 'url'],
-        },
-      ],
-    })
+  async store(req, res) {
+    const { id: order_id } = req.params
+    const { description } = req.body
 
-    return res.json(orders)
+    const order = await Order.findByPk(order_id)
+
+    if (!order) {
+      return res.status(400).json({ error: 'Invalid order' })
+    }
+
+    if (order.canceled_at) {
+      return res.status(409).json({ error: 'Order has been canceled' })
+    }
+
+    const orderIssue = await OrderIssue.create({ order_id, description })
+
+    return res.json(orderIssue)
   }
 
   async update(req, res) {
@@ -182,4 +155,4 @@ class DeliverymanOrderController {
   }
 }
 
-export default new DeliverymanOrderController()
+export default new DeliveryController()
